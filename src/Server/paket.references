@@ -1,0 +1,8 @@
+FSharp.Core
+Suave
+Microsoft.Extensions.Logging.Console
+System.Net.NetworkInformation
+Newtonsoft.Json
+Fable.JsonConverter
+jose-jwt
+Fable.Remoting.Suave.Core
