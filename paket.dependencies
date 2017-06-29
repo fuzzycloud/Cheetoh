@@ -11,11 +11,14 @@ nuget Newtonsoft.Json prerelease
 nuget jose-jwt
 
 # Keep this version synced with dotnet-fable in .fsproj
-nuget Fable.Core 1.0.8
+nuget Fable.Core 1.1.5
 
 nuget Fable.Elmish.Browser
 nuget Fable.Elmish.Debugger
 nuget Fable.Elmish.React
+nuget Fable.Aether
+nuget Fable.Elmish.Bulma prerelease
+nuget Fable.PowerPack
 
 group Test
   source https://nuget.org/api/v2

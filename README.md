@@ -1,3 +1,10 @@
+#Chapter 0
+
+Basic set up based on [scaffold project branch fable-remoting](https://github.com/fable-compiler/fable-suave-scaffold/tree/fable-remoting) .
+
+**Readme* file is copied as it is as belowed. There are few more project added which are very much specific to this project.
+
+
 # A web stack designed for developer happiness
 
 The following document describes the Fable + Suave sample project. You can see it running on azure at http://fable-suave.azurewebsites.net.

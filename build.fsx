@@ -84,7 +84,8 @@ Target "Clean" (fun _ ->
 )
 
 Target "InstallDotNetCore" (fun _ ->
-    dotnetExePath <- DotNetCli.InstallDotNetSDK dotnetcliVersion
+    // dotnetExePath <- DotNetCli.InstallDotNetSDK dotnetcliVersion
+    printfn ""
 )
 
 // --------------------------------------------------------------------------------------
