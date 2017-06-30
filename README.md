@@ -110,5 +110,4 @@ If you are in [development mode](#development-mode) then you can use Expecto's f
 
 ## Maintainer(s)
 
-- [@forki](https://github.com/forki)
-- [@alfonsogarciacaro](https://github.com/alfonsogarciacaro)
+- [@kunjee17](https://github.com/kunjee17)
