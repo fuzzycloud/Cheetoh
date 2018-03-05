@@ -11,7 +11,7 @@ let appPath = "./src/Cheetoh/" |> FullName
 
 
 let dockerUser = getBuildParam "DockerUser"
-let dockerPassword = getBuildParam "DockerPassword"
+// let dockerPassword = getBuildParam "DockerPassword"
 let dockerLoginServer = getBuildParam "DockerLoginServer"
 let dockerImageName = getBuildParam "DockerImageName"
 
@@ -106,7 +106,7 @@ Target "Deploy" (fun _ ->
         ExecProcess (fun info ->
             info.FileName <- "docker"
             info.WorkingDirectory <- deployDir
-            info.Arguments <- sprintf "login %s --username \"%s\" --password \"%s\"" dockerLoginServer dockerUser dockerPassword) TimeSpan.MaxValue
+            info.Arguments <- sprintf "login %s --username \"%s\" --password-stdin \"%s\"" dockerLoginServer dockerUser) TimeSpan.MaxValue
     if result <> 0 then failwith "Docker login failed"
 
     let result =
