@@ -27,9 +27,16 @@ run() {
   fi
 }
 
-run $PAKET_EXE restore
+echo "Executing Paket..."
 
-[ ! -e build.fsx ] && run $PAKET_EXE update
-[ ! -e build.fsx ] && run $FAKE_EXE init.fsx
+FILE='paket.lock'     
+if [ -f $FILE ]; then
+   echo "paket.lock file found, restoring packages..."
+   run $PAKET_EXE restore
+else
+   echo "paket.lock was not found, installing packages..."
+   run $PAKET_EXE install
+fi
+
 run $FAKE_EXE "$@" $FSIARGS $FSIARGS2 build.fsx
 
