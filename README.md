@@ -18,3 +18,7 @@ Everything is good to go. As build command showing it all green.
 Docker normally comes in the picture at the time of deployment. But I like it in start. It is very good constraint to have.
 
 There are normally two options either you build with docker (good option if you are having separate deployment pipeline) or run with docker. Currently we gonna use second option. It is just a personal preference nothing else.
+
+You can easily use `FAKE` to do all the Docker stuff. Here we are not only creating new docker image but also pushing it to docker hub. You can find updated image at [kunjee/cheetoh](https://hub.docker.com/r/kunjee/cheetoh/).
+
+You can pull it and run using docker.
