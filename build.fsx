@@ -106,7 +106,7 @@ Target "Deploy" (fun _ ->
         ExecProcess (fun info ->
             info.FileName <- "docker"
             info.WorkingDirectory <- deployDir
-            info.Arguments <- sprintf "login %s --username \"%s\" --password-stdin \"%s\"" dockerLoginServer dockerUser) TimeSpan.MaxValue
+            info.Arguments <- sprintf "login %s --username \"%s\" --password-stdin" dockerLoginServer dockerUser) TimeSpan.MaxValue
     if result <> 0 then failwith "Docker login failed"
 
     let result =
