@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 
 set -eu
+set -o pipefail
 
 cd "$(dirname "$0")"
 
+# PAKET_BOOTSTRAPPER_EXE=.paket/paket.bootstrapper.exe
 PAKET_EXE=.paket/paket.exe
-FAKE_EXE=packages/build/FAKE/tools/FAKE.exe
+FAKE_EXE=fake
 
 FSIARGS=""
 FSIARGS2=""
@@ -27,16 +29,7 @@ run() {
   fi
 }
 
-echo "Executing Paket..."
-
-FILE='paket.lock'     
-if [ -f $FILE ]; then
-   echo "paket.lock file found, restoring packages..."
-   run $PAKET_EXE restore
-else
-   echo "paket.lock was not found, installing packages..."
-   run $PAKET_EXE install
-fi
-
-run $FAKE_EXE "$@" $FSIARGS $FSIARGS2 build.fsx
-
+# run $PAKET_BOOTSTRAPPER_EXE
+run $PAKET_EXE restore
+# $FAKE_EXE run build.fsx --target "$@" $FSIARGS $FSIARGS2
+$FAKE_EXE run build.fsx --target "$@"

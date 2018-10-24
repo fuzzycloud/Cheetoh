@@ -1,151 +1,127 @@
-open System.IO
-open Fake.Git.Staging
-#r @"packages/build/FAKE/tools/FakeLib.dll"
+#r "paket: groupref build //"
+#load "./.fake/build.fsx/intellisense.fsx"
+
+#if !FAKE
+#r "netstandard"
+#r "Facades/netstandard" // https://github.com/ionide/ionide-vscode-fsharp/issues/839#issuecomment-396296095
+#endif
 
 open System
 
-open Fake
-open Fake.ReleaseNotesHelper
+open Fake.Core
+open Fake.DotNet
+open Fake.IO
 
-let appPath = "./src/Cheetoh/" |> FullName
+let appPath = Path.getFullName "./src/Cheetoh/"
+let deployDir = Path.getFullName "./deploy"
 
+let platformTool tool winTool =
+    let tool = if Environment.isUnix then tool else winTool
+    match ProcessUtils.tryFindFileOnPath tool with
+    | Some t -> t
+    | _ ->
+        let errorMsg =
+            tool + " was not found in path. " +
+            "Please install it and make sure it's available from your path. " +
+            "See https://safe-stack.github.io/docs/quickstart/#install-pre-requisites for more info"
+        failwith errorMsg
 
-let dockerUser = getBuildParam "DockerUser"
-// let dockerPassword = getBuildParam "DockerPassword"
-let dockerLoginServer = getBuildParam "DockerLoginServer"
-let dockerImageName = getBuildParam "DockerImageName"
+let nodeTool = platformTool "node" "node.exe"
+let yarnTool = platformTool "yarn" "yarn.cmd"
 
-let deployDir = "./deploy"
+let install = lazy DotNet.install (fun o -> {o with Version = DotNet.Version (DotNet.getSDKVersionFromGlobalJson())})
 
-let releaseNotes = File.ReadAllLines "RELEASE_NOTES.md"
-let releaseNotesData =
-    releaseNotes
-    |> parseAllReleaseNotes
+let inline withWorkDir wd =
+    DotNet.Options.lift install.Value
+    >> DotNet.Options.withWorkingDirectory wd
 
-let release = List.head releaseNotesData
-
-
-let dotnetcliVersion = DotNetCli.GetDotNetSDKVersionFromGlobalJson()
-
-Target "Clean" (fun _ ->
-    !!"src/**/bin"
-    |> CleanDirs
-
-    !! "src/**/obj/*.nuspec"
-    |> DeleteFiles
-
-    CleanDirs ["bin"; "temp"; "docs/output"; deployDir]
-)
-
-Target "InstallDotNetCore" (fun _ ->
-  DotNetCli.InstallDotNetSDK dotnetcliVersion |> ignore
-)
+// let runTool cmd args workingDir =
 
 
-Target "Restore" (fun _ ->
-    DotNetCli.Restore (fun p -> {p with WorkingDir = appPath})
-)
 
-Target "Build" (fun _ ->
-    DotNetCli.Build(fun p -> {p with WorkingDir = appPath})
-)
+//     let result =
+//         Process.execSimple (fun info ->
+//             { info with
+//                 FileName = cmd
+//                 WorkingDirectory = workingDir
+//                 Arguments = args })
+//             TimeSpan.MaxValue
+//     if result <> 0 then failwithf "'%s %s' failed" cmd args
 
-Target "BuildRelease" (fun _ ->
-  DotNetCli.Publish(fun p -> {p with WorkingDir = appPath; Output = FullName deployDir})
-)
-
-Target "CreateDockerImage" (fun _ ->
-    if String.IsNullOrEmpty dockerUser then
-        failwithf "docker username not given."
-    if String.IsNullOrEmpty dockerImageName then
-        failwithf "docker image Name not given."
+let runDotNet cmd workingDir =
     let result =
-        ExecProcess (fun info ->
-            info.FileName <- "docker"
-            info.UseShellExecute <- false
-            info.Arguments <- sprintf "build -t %s/%s ." dockerUser dockerImageName) TimeSpan.MaxValue
-    if result <> 0 then failwith "Docker build failed"
-)
+        DotNet.exec (withWorkDir workingDir) cmd ""
+    if result.ExitCode <> 0 then failwithf "'dotnet %s' failed in %s" cmd workingDir
 
-
-Target "SetReleaseNotes" (fun _ ->
-    let lines = [
-            "module internal ReleaseNotes"
-            ""
-            (sprintf "let Version = \"%s\"" release.NugetVersion)
-            ""
-            (sprintf "let IsPrerelease = %b" (release.SemVer.PreRelease <> None))
-            ""
-            "let Notes = \"\"\""] @ Array.toList releaseNotes @ ["\"\"\""]
-    File.WriteAllLines("src/Cheetoh/ReleaseNotes.fs",lines)
-)
-
-
-Target "PrepareRelease" (fun _ ->
-    Git.Branches.checkout "" false "master"
-    Git.CommandHelper.directRunGitCommand "" "fetch origin" |> ignore
-    Git.CommandHelper.directRunGitCommand "" "fetch origin --tags" |> ignore
-
-    StageAll ""
-    Git.Commit.Commit "" (sprintf "Bumping version to %O" release.NugetVersion)
-    Git.Branches.pushBranch "" "origin" "master"
-
-    let tagName = string release.NugetVersion
-    Git.Branches.tag "" tagName
-    Git.Branches.pushTag "" "origin" tagName
-
+let openBrowser url =
     let result =
-        ExecProcess (fun info ->
-            info.FileName <- "docker"
-            info.Arguments <- sprintf "tag %s/%s %s/%s:%s" dockerUser dockerImageName dockerUser dockerImageName release.NugetVersion) TimeSpan.MaxValue
-    if result <> 0 then failwith "Docker tag failed"
+        //https://github.com/dotnet/corefx/issues/10361
+       Command.ShellCommand (url) |> CreateProcess.fromCommand |> Proc.run
+    if result.ExitCode <> 0 then failwithf "opening browser failed"
+
+Target.create "Clean" (fun _ ->
+    Shell.cleanDirs [deployDir]
 )
 
-Target "Deploy" (fun _ ->
-    let result =
-        ExecProcess (fun info ->
-            info.FileName <- "docker"
-            info.WorkingDirectory <- deployDir
-            info.Arguments <- sprintf "login %s --username \"%s\" --password-stdin" dockerLoginServer dockerUser) TimeSpan.MaxValue
-    if result <> 0 then failwith "Docker login failed"
 
-    let result =
-        ExecProcess (fun info ->
-            info.FileName <- "docker"
-            info.WorkingDirectory <- deployDir
-            info.Arguments <- sprintf "push %s/%s" dockerUser dockerImageName) TimeSpan.MaxValue
-    if result <> 0 then failwith "Docker push failed"
+
+Target.create "RestoreServer" (fun _ ->
+    runDotNet "restore" appPath
 )
 
-Target "Run" (fun () ->
-  let server = async {
-    DotNetCli.RunCommand (fun p -> {p with WorkingDir = appPath}) "watch run"
-  }
-  let browser = async {
-    Threading.Thread.Sleep 5000
-    Diagnostics.Process.Start "http://localhost:8085" |> ignore
-  }
-
-  [ server; browser]
-  |> Async.Parallel
-  |> Async.RunSynchronously
-  |> ignore
+Target.create "Build" (fun _ ->
+    runDotNet "build" appPath
 )
+
+Target.create "Run" (fun _ ->
+    let server = async {
+        runDotNet "watch run" appPath
+    }
+
+    let browser = async {
+        do! Async.Sleep 5000
+        openBrowser "http://localhost:8085"
+    }
+
+    [ server; browser ]
+    |> Async.Parallel
+    |> Async.RunSynchronously
+    |> ignore
+)
+
+// Target.create "Bundle" (fun _ ->
+//     let serverDir = Path.combine deployDir "Server"
+// =
+//     let publicDir = Path.combine clientDir "public"
+
+//     let publishArgs = sprintf "publish -c Release -o \"%s\"" serverDir
+//     runDotNet publishArgs serverPath
+
+//     Shell.copyDir publicDir "src/Client/public" FileFilter.allFiles
+// )
+
+// let dockerUser = "safe-template"
+// let dockerImageName = "safe-template"
+// let dockerFullName = sprintf "%s/%s" dockerUser dockerImageName
+
+// Target.create "Docker" (fun _ ->
+//     let buildArgs = sprintf "build -t %s ." dockerFullName
+//     runTool "docker" buildArgs "."
+
+//     let tagArgs = sprintf "tag %s %s" dockerFullName dockerFullName
+//     runTool "docker" tagArgs "."
+// )
+
+
+open Fake.Core.TargetOperators
 
 "Clean"
-  ==> "InstallDotNetCore"
-  ==> "Build"
+    ==> "Build"
+    // ==> "Bundle"
+    // ==> "Docker"
 
 "Clean"
-  ==> "Restore"
-  ==> "Run"
+    ==> "RestoreServer"
+    ==> "Run"
 
-"Clean"
-  ==> "InstallDotNetCore"
-  ==> "SetReleaseNotes"
-  ==> "BuildRelease"
-  ==> "CreateDockerImage"
-  ==> "PrepareRelease"
-  ==> "Deploy"
-
-RunTargetOrDefault "Build"
+Target.runOrDefaultWithArguments "Build"

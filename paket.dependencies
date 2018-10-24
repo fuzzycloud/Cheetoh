@@ -1,4 +1,5 @@
 source https://api.nuget.org/v3/index.json
+storage: none
 
 nuget FSharp.Core
 nuget Saturn
@@ -6,10 +7,13 @@ nuget Simple.Migrations
 nuget Microsoft.Data.Sqlite
 nuget Dapper
 
-clitool Microsoft.DotNet.Watcher.Tools
 clitool dotnet-saturn
 
 group Build
-  source https://api.nuget.org/v3/index.json
+    storage: none
+    source https://api.nuget.org/v3/index.json
 
-  nuget FAKE
+    nuget FSharp.Core 4.3.4 // https://github.com/fsharp/FAKE/issues/2001
+    nuget Fake.Core.Target
+    nuget Fake.DotNet.Cli
+    nuget Fake.IO.FileSystem

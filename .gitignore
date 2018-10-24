@@ -4,5 +4,3 @@ bin/
 packages/
 paket-files/
 .vs/
-deploy/
-release.cmd
