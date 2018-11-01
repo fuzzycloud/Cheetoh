@@ -1,7 +1,5 @@
-FROM microsoft/aspnetcore:2.0.5
-COPY deploy /app
-WORKDIR /app
-# EXPOSE 80
+FROM microsoft/dotnet:2.1-aspnetcore-runtime-alpine
+COPY /deploy /
+WORKDIR /Server
 EXPOSE 8085
-# ENV ASPNETCORE_URLS http://*:5000
-ENTRYPOINT ["dotnet", "Cheetoh.dll"]
+ENTRYPOINT [ "dotnet", "Server.dll" ]

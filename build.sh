@@ -5,7 +5,6 @@ set -o pipefail
 
 cd "$(dirname "$0")"
 
-# PAKET_BOOTSTRAPPER_EXE=.paket/paket.bootstrapper.exe
 PAKET_EXE=.paket/paket.exe
 FAKE_EXE=fake
 
@@ -29,7 +28,5 @@ run() {
   fi
 }
 
-# run $PAKET_BOOTSTRAPPER_EXE
 run $PAKET_EXE restore
-# $FAKE_EXE run build.fsx --target "$@" $FSIARGS $FSIARGS2
 $FAKE_EXE run build.fsx --target "$@"

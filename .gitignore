@@ -1,6 +1,14 @@
+.fable/
 .fake/
+.vs/
 obj/
 bin/
 packages/
 paket-files/
-.vs/
+node_modules/
+src/Client/public/js/
+release.cmd
+release.sh
+.idea/
+*.DotSettings.user
+deploy
