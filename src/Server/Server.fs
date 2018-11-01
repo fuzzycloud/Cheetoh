@@ -12,8 +12,6 @@ open Shared
 open Fable.Remoting.Server
 open Fable.Remoting.Giraffe
 
-let publicPath = Path.GetFullPath "../Client/public"
-let port = 8085us
 
 let getInitCounter () : Task<Counter> = task { return 42 }
 
@@ -21,8 +19,14 @@ let cheetohApi = {
     initialCounter = getInitCounter >> Async.AwaitTask
 }
 
-let webApp env: HttpFunc -> Http.HttpContext -> HttpFuncResult =
+let webApi env: HttpFunc -> Http.HttpContext -> HttpFuncResult =
     Remoting.createApi()
     |> Remoting.withRouteBuilder Route.builder
     |> Remoting.fromValue cheetohApi
     |> Remoting.buildHttpHandler
+
+let webApp env =
+    choose [
+     GET >=> route "/about" >=> htmlFile "about.html"
+     webApi env
+  ]

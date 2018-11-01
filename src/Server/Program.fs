@@ -19,7 +19,14 @@ let mutable port = 8085us
 let configureApp (app : IApplicationBuilder) =
     let serviceProvider = app.ApplicationServices
     let hostingEnv = serviceProvider.GetService<IHostingEnvironment>()
-    port <- if hostingEnv.IsProduction() then 80us else 8085us
+    printfn "hosting environment ---- %A" hostingEnv.EnvironmentName
+    port <- if hostingEnv.IsProduction()
+            then
+                printfn "port is set to 80"
+                80us
+            else
+                printfn "port is set to 8085"
+                8085us
     app.UseDefaultFiles()
        .UseStaticFiles()
        .UseGiraffe (webApp hostingEnv)
