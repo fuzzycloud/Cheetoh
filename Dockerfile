@@ -15,18 +15,17 @@ ENV PATH="${PATH}:/root/.dotnet/tools"
 
 # Initialize node_modules
 COPY package.json yarn.lock ./
-#RUN yarn install
+RUN yarn install
 
 # Initialize paket packages
 COPY paket.dependencies paket.lock ./
 COPY .paket .paket
-#RUN mono .paket/paket.exe restore
+RUN mono .paket/paket.exe restore
 
 # Copy everything else and run the build
 COPY . ./
 RUN rm -rf deploy
-#RUN fake run build.fsx --target Bundle
-RUN sh build.sh Bundle
+RUN fake run build.fsx --target Bundle
 
 
 
