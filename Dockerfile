@@ -35,5 +35,5 @@ WORKDIR /app
 COPY --from=builder /build/deploy ./
 # here I have to map it to server directory
 WORKDIR /app/Server
-EXPOSE 80
+EXPOSE 8085
 ENTRYPOINT [ "dotnet", "Server.dll" ]
