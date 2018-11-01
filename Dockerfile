@@ -35,6 +35,4 @@ WORKDIR /app
 COPY --from=builder /build/deploy ./
 # here I have to map it to server directory
 WORKDIR /app/Server
-# TODO: neet to change this to expose on port 80 if it is in production else have to map things on cloud
-EXPOSE 8085
 ENTRYPOINT [ "dotnet", "Server.dll" ]
