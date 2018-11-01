@@ -1,11 +1,9 @@
-open System
+module Server
+
 open System.IO
 open System.Threading.Tasks
 
 open Microsoft.AspNetCore
-open Microsoft.AspNetCore.Builder
-open Microsoft.AspNetCore.Hosting
-open Microsoft.Extensions.DependencyInjection
 
 open FSharp.Control.Tasks.V2
 open Giraffe
@@ -19,31 +17,12 @@ let port = 8085us
 
 let getInitCounter () : Task<Counter> = task { return 42 }
 
-let counterApi = {
+let cheetohApi = {
     initialCounter = getInitCounter >> Async.AwaitTask
 }
 
-let webApp =
+let webApp env: HttpFunc -> Http.HttpContext -> HttpFuncResult =
     Remoting.createApi()
     |> Remoting.withRouteBuilder Route.builder
-    |> Remoting.fromValue counterApi
+    |> Remoting.fromValue cheetohApi
     |> Remoting.buildHttpHandler
-
-
-let configureApp (app : IApplicationBuilder) =
-    app.UseDefaultFiles()
-       .UseStaticFiles()
-       .UseGiraffe webApp
-
-let configureServices (services : IServiceCollection) =
-    services.AddGiraffe() |> ignore
-
-WebHost
-    .CreateDefaultBuilder()
-    .UseWebRoot(publicPath)
-    .UseContentRoot(publicPath)
-    .Configure(Action<IApplicationBuilder> configureApp)
-    .ConfigureServices(configureServices)
-    .UseUrls("http://0.0.0.0:" + port.ToString() + "/")
-    .Build()
-    .Run()
