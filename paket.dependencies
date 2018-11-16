@@ -8,6 +8,10 @@ group Server
     nuget Microsoft.AspNetCore
     nuget Microsoft.AspNetCore.StaticFiles
     nuget Fable.Remoting.Giraffe
+    nuget LiteDB.FSharp
+    nuget Hashids.net
+    nuget JWT prerelease
+
 
 group Client
     source https://api.nuget.org/v3/index.json
@@ -34,4 +38,3 @@ group Build
     nuget Fake.Core.Target
     nuget Fake.DotNet.Cli
     nuget Fake.IO.FileSystem
-

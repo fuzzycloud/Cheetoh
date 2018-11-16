@@ -28,5 +28,6 @@ let webApi env: HttpFunc -> Http.HttpContext -> HttpFuncResult =
 let webApp env =
     choose [
      GET >=> route "/about" >=> htmlFile "about.html"
+     GET >=> route "/admin" >=> htmlFile "admin.html"
      webApi env
   ]
