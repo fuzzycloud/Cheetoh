@@ -62,7 +62,19 @@ let update (msg:Msg) (model:Model) =
         | AuthenticationMsg msg, AuthenticationModel m ->
             let (authentication, authenticationCmd) = Authentication.State.update msg m
             let (res,resCmd) = {model with PageModel = AuthenticationModel authentication}, Cmd.map AuthenticationMsg authenticationCmd
-            (res,resCmd)
+            match msg with
+            | Authentication.Types.SignUpMsg _ -> (res,resCmd)
+            | Authentication.Types.EMailMsg _ -> (res,resCmd)
+            | Authentication.Types.LoginMsg lMsg ->
+                match lMsg with
+                | Login.Types.LoggedIn l ->
+                    Toast.success "User Logged In"
+                    { res with UserToken = Some l }, Cmd.ofMsg (AuthenticationMsg (Authentication.Types.LoginMsg Login.Types.Msg.ChangeUrl))
+                | Login.Types.ChangeUrl ->
+                    let (m,mCmd) = urlUpdate (Some (Home |> ApplicationPage)) model
+                    in
+                    m,Cmd.batch([mCmd; Navigation.modifyUrl(toHash (Home |> ApplicationPage))])
+                | _ -> (res,resCmd)
 
         | ApplicationMsg msg, ApplicationModel m ->
             let (application, applicationCmd) = Application.State.update msg m

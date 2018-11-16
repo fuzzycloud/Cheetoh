@@ -10,7 +10,7 @@ function resolve(p) {
 }
 
 var CONFIG = {
-    indexHtmlTemplate: resolve("./public/admin.html"),
+    indexHtmlTemplate: resolve("./public/index.html"),
     fsharpEntry: resolve("./Client.fsproj"),
     cssEntry: resolve("./sass/main.sass"),
     outputDir: resolve("./public/bundle"),
@@ -25,7 +25,7 @@ var CONFIG = {
         }
     },
     historyApiFallback: {
-        index: resolve("./about.html")
+        index: resolve("./index.html")
     },
 
     // Use babel-preset-env to generate JS compatible with most-used browsers.
@@ -55,7 +55,7 @@ var MiniCssExtractPlugin = require("mini-css-extract-plugin");
 // and automatically injects <script> or <link> tags for generated bundles.
 var commonPlugins = [
     new HtmlWebpackPlugin({
-        filename: 'admin.html',
+        filename: 'index.html',
         template: CONFIG.indexHtmlTemplate
     })
 ];

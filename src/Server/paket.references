@@ -4,3 +4,6 @@ group Server
     Microsoft.AspNetCore
     Microsoft.AspNetCore.StaticFiles
     Fable.Remoting.Giraffe
+    LiteDB.FSharp
+    Hashids.net
+    JWT
