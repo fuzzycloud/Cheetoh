@@ -1,11 +1,23 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
-    </PropertyGroup>
-    <ItemGroup>
-        <Compile Include="..\Shared\Shared.fs" />
-        <Compile Include="Client.fs" />
-    </ItemGroup>
-    <Import Project="..\..\.paket\Paket.Restore.targets" />
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../Shared/Validation/ROPHelper.fs" />
+    <Compile Include="../Shared/Shared.fs" />
+    <Compile Include="Helper/Fable.Import.IziToast.fs" />
+    <Compile Include="Helper/CommonHelpers.fs" />
+    <Compile Include="Helper/Http.fs" />
+    <Compile Include="Global.fs" />
+    <Compile Include="Pages/Application/Home.fs" />
+    <Compile Include="Pages/Application/Application.fs" />
+    <Compile Include="Pages/Authentication/Email.fs" />
+    <Compile Include="Pages/Authentication/Login.fs" />
+    <Compile Include="Pages/Authentication/SignUp.fs" />
+    <Compile Include="Pages/Authentication/Authentication.fs" />
+    <Compile Include="Types.fs" />
+    <Compile Include="State.fs" />
+    <Compile Include="App.fs" />
+  </ItemGroup>
+  <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>
