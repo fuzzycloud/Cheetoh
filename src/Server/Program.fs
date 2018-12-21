@@ -17,12 +17,9 @@ let port = 8085us
 
 
 let configureApp (app : IApplicationBuilder) =
-    let serviceProvider = app.ApplicationServices
-    let hostingEnv = serviceProvider.GetService<IHostingEnvironment>()
-
-    app.UseDefaultFiles()
+    app
        .UseStaticFiles()
-       .UseGiraffe (webApp hostingEnv)
+       .UseGiraffe (webApp)
 
 let configureServices (services : IServiceCollection) =
     services.AddGiraffe() |> ignore
