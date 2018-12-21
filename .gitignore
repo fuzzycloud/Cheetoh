@@ -6,10 +6,11 @@ bin/
 packages/
 paket-files/
 node_modules/
-src/Client/public/js/
+src/Client/public/bundle/
 release.cmd
 release.sh
 .idea/
 *.DotSettings.user
 deploy
 .DS_Store
+s

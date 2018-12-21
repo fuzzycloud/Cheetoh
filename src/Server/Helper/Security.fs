@@ -2,11 +2,12 @@ namespace Helper
 open System.Text
 open System
 open System.Security.Cryptography
-open JWT.Builder
+open JWT
 open JWT.Algorithms
 open System.Collections.Generic
 open Shared
 open HashidsNet
+open JWT.Builder
 
 [<CLIMutable>]
 type Payload = {
