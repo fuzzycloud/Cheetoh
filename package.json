@@ -20,6 +20,7 @@
         "bulma": "^0.7.2",
         "bulma-extensions": "^3.0.0",
         "bulmaswatch": "^0.7.2",
+        "clean-webpack-plugin": "^1.0.0",
         "concurrently": "4.0.1",
         "copy-webpack-plugin": "^4.6.0",
         "css-loader": "^1.0.1",
