@@ -3,9 +3,6 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="../Shared/Validation/ROPHelper.fs" />
-    <Compile Include="../Shared/Validation/CommonStringValidation.fs" />
-    <Compile Include="../Shared/Shared.fs" />
     <Compile Include="Helper/Fable.Import.IziToast.fs" />
     <Compile Include="Helper/CommonHelpers.fs" />
     <Compile Include="Helper/Http.fs" />
@@ -19,6 +16,9 @@
     <Compile Include="Types.fs" />
     <Compile Include="State.fs" />
     <Compile Include="App.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Shared\Shared.fsproj" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>
