@@ -50,10 +50,12 @@ var webpack = require("webpack");
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 var MiniCssExtractPlugin = require("mini-css-extract-plugin");
+var CleanWebpackPlugin = require('clean-webpack-plugin');
 
 // The HtmlWebpackPlugin allows us to use a template for the index.html page
 // and automatically injects <script> or <link> tags for generated bundles.
 var commonPlugins = [
+    new CleanWebpackPlugin([CONFIG.outputDir]),
     new HtmlWebpackPlugin({
         filename: 'index.html',
         template: CONFIG.indexHtmlTemplate

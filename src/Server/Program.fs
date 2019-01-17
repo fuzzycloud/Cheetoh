@@ -12,7 +12,7 @@ open Server
 
 
 
-let publicPath = Path.GetFullPath "../Client/public"
+let publicPath = Path.GetFullPath "../Client/public/bundle"
 let port = 8085us
 
 
