@@ -12,6 +12,11 @@ group Server
     nuget Hashids.net
     nuget JWT prerelease
 
+group Shared
+    source https://api.nuget.org/v3/index.json
+    storage: none
+
+    nuget FSharp.Core
 
 group Client
     source https://api.nuget.org/v3/index.json

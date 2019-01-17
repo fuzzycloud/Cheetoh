@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Validation/CommonStringValidation.fs" />
+    <Compile Include="Validation/ROPHelper.fs" />
+    <Compile Include="Config.fs" />
+    <Compile Include="Shared.fs" />
+  </ItemGroup>
+  <Import Project="..\..\.paket\Paket.Restore.targets" />
+</Project>
