@@ -10,10 +10,6 @@
     <Compile Include="Helper/Security.fs" />
     <Compile Include="Services/User.fs" />
     <Compile Include="Services/Cheetoh.fs" />
-    <Compile Include="Views/Partials/Dummy.fs" />
-    <Compile Include="Views/Layout.fs" />
-    <Compile Include="Views/Home.fs" />
-    <Compile Include="Views/About.fs" />
     <Compile Include="Server.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
