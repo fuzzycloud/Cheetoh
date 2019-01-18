@@ -1,0 +1,11 @@
+@{
+    Layout = "_Layout";
+}
+
+<div class="container">
+    <h3 title="Some Title Attribute"> Hello Kunjan</h3>
+    <a href="https://github.com/giraffe-fsharp/Giraffe">Github</a>
+    @{
+        await Html.RenderPartialAsync("Partials/Dummy");
+}
+</div>

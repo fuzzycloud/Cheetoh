@@ -11,6 +11,7 @@ group Server
     nuget LiteDB.FSharp
     nuget Hashids.net
     nuget JWT prerelease
+    nuget Giraffe.Razor
 
 group Shared
     source https://api.nuget.org/v3/index.json
