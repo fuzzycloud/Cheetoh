@@ -7,12 +7,14 @@ open Microsoft.AspNetCore.Hosting
 open Microsoft.Extensions.DependencyInjection
 
 open Giraffe
+open Giraffe.Razor
 
 open Server
+open Microsoft.Extensions.Hosting
 
 
 
-let publicPath = Path.GetFullPath "../Client/public/bundle"
+let publicPath = Path.GetFullPath "../Client/public"
 let port = 8085us
 
 
@@ -22,7 +24,12 @@ let configureApp (app : IApplicationBuilder) =
        .UseGiraffe (webApp)
 
 let configureServices (services : IServiceCollection) =
-    services.AddGiraffe() |> ignore
+       let sp  = services.BuildServiceProvider()
+       let env = sp.GetService<IHostingEnvironment>()
+       Path.Combine(env.ContentRootPath, "Views")
+       |> services.AddRazorEngine
+       |> ignore
+       services.AddGiraffe() |> ignore
 
 WebHost
     .CreateDefaultBuilder()

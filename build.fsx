@@ -14,6 +14,7 @@ open Fake.IO
 
 let serverPath = Path.getFullName "./src/Server"
 let clientPath = Path.getFullName "./src/Client"
+let clientDeployPath = Path.combine clientPath "deploy"
 let deployDir = Path.getFullName "./deploy"
 
 let platformTool tool winTool =
@@ -53,7 +54,9 @@ let openBrowser url =
     |> ignore
 
 Target.create "Clean" (fun _ ->
-    Shell.cleanDirs [deployDir]
+    [ deployDir
+      clientDeployPath ]
+    |> Shell.cleanDirs
 )
 
 Target.create "InstallClient" (fun _ ->
@@ -65,13 +68,9 @@ Target.create "InstallClient" (fun _ ->
     runDotNet "restore" clientPath
 )
 
-Target.create "RestoreServer" (fun _ ->
-    runDotNet "restore" serverPath
-)
-
 Target.create "Build" (fun _ ->
     runDotNet "build" serverPath
-    runDotNet "fable webpack-cli -- --config src/Client/webpack.config.js -p" clientPath
+    runTool yarnTool "webpack-cli -p" __SOURCE_DIRECTORY__
 )
 
 Target.create "Run" (fun _ ->
@@ -79,15 +78,22 @@ Target.create "Run" (fun _ ->
         runDotNet "watch run" serverPath
     }
     let client = async {
-        runDotNet "fable webpack-dev-server -- --config src/Client/webpack.config.js" clientPath
+        runTool yarnTool "webpack-dev-server" __SOURCE_DIRECTORY__
     }
     let browser = async {
         do! Async.Sleep 5000
-        // openBrowser "http://localhost:8085"
-        openBrowser "http://localhost:8080" // fable development browser
+        openBrowser "http://localhost:8080"
     }
 
-    [ server; client; browser ]
+    let vsCodeSession = Environment.hasEnvironVar "vsCodeSession"
+    let safeClientOnly = Environment.hasEnvironVar "safeClientOnly"
+
+    let tasks =
+        [ if not safeClientOnly then yield server
+          yield client
+          if not vsCodeSession then yield browser ]
+
+    tasks
     |> Async.Parallel
     |> Async.RunSynchronously
     |> ignore
@@ -101,7 +107,7 @@ Target.create "Bundle" (fun _ ->
     let publishArgs = sprintf "publish -c Release -o \"%s\"" serverDir
     runDotNet publishArgs serverPath
 
-    Shell.copyDir publicDir "src/Client/public" FileFilter.allFiles
+    Shell.copyDir publicDir clientDeployPath FileFilter.allFiles
 )
 
 let dockerUser = "safe-template"
@@ -117,6 +123,7 @@ Target.create "Docker" (fun _ ->
 )
 
 
+
 open Fake.Core.TargetOperators
 
 "Clean"
@@ -125,9 +132,9 @@ open Fake.Core.TargetOperators
     ==> "Bundle"
     ==> "Docker"
 
+
 "Clean"
     ==> "InstallClient"
-    ==> "RestoreServer"
     ==> "Run"
 
 Target.runOrDefaultWithArguments "Build"

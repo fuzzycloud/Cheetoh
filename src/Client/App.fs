@@ -12,7 +12,7 @@ open Fulma
 
 importAll "../../node_modules/flatpickr/dist/themes/light.css"
 importAll "./../../node_modules/izitoast/dist/css/iziToast.css"
-importAll "./sass/main.sass"
+// importAll "./sass/main.sass"
 
 let root model dispatch =
 

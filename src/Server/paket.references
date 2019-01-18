@@ -7,3 +7,4 @@ group Server
     LiteDB.FSharp
     Hashids.net
     JWT
+    Giraffe.Razor
