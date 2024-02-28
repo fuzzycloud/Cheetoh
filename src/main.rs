@@ -3,9 +3,9 @@
 async fn main() -> std::io::Result<()> {
     use actix_files::Files;
     use actix_web::*;
+    use cheetoh::app::*;
     use leptos::*;
     use leptos_actix::{generate_route_list, LeptosRoutes};
-    use cheetoh::app::*;
 
     let conf = get_configuration(None).await.unwrap();
     let addr = conf.leptos_options.site_addr;
@@ -58,8 +58,8 @@ pub fn main() {
     // a client-side main function is required for using `trunk serve`
     // prefer using `cargo leptos serve` instead
     // to run: `trunk serve --open --features csr`
-    use leptos::*;
     use cheetoh::app::*;
+    use leptos::*;
     use wasm_bindgen::prelude::wasm_bindgen;
 
     console_error_panic_hook::set_once();
