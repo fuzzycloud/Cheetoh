@@ -6,7 +6,7 @@ async fn main() -> std::io::Result<()> {
     use cheetoh::{
         app::*,
         dto::app_state::AppState,
-        helper::{login::login, singup::signup},
+        helper::{blog::blog, login::login, singup::signup},
     };
     use dotenv::var;
     use leptos::*;
@@ -57,7 +57,21 @@ async fn main() -> std::io::Result<()> {
     )
     .execute(&read_pool)
     .await
-    .expect("Failed to create table");
+    .expect("Failed to create auth table");
+
+
+sqlx::query(
+        r#"
+        CREATE TABLE IF NOT EXISTS blog (
+            id TEXT PRIMARY KEY,
+            title TEXT NOT NULL,
+            content TEXT NOT NULL
+        )
+        "#,
+    )
+    .execute(&read_pool)
+    .await
+    .expect("Failed to create blog table");
 
     HttpServer::new(move || {
         let leptos_options = &conf.leptos_options;
@@ -82,6 +96,7 @@ async fn main() -> std::io::Result<()> {
             .app_data(web::Data::new(leptos_options.to_owned()))
             .service(signup)
             .service(login)
+            .service(blog)
         //.wrap(middleware::Compress::default())
     })
     .bind(&addr)?

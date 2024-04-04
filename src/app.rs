@@ -10,6 +10,7 @@ use leptos_router::*;
 pub fn App() -> impl IntoView {
     // Provides context that manages stylesheets, titles, meta tags, etc.
     provide_meta_context();
+    
     view! {
         <Stylesheet id="leptos" href="/pkg/cheetoh.css"/>
         <Link rel="shortcut icon" type_="image/ico" href="/favicon.ico"/>

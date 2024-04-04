@@ -2,9 +2,9 @@ use leptos::*;
 
 #[component]
 pub fn HomePage() -> impl IntoView {
+
     view! {
         <div>
-            // Navigation Bar
             <nav class="flex items-center justify-between p-6 bg-blue-500 text-black">
                 <div class="flex items-center flex-shrink-0 mr-6 text-3xl">
                     <span class="font-semibold tracking-tight">Cheetoh</span>
@@ -17,8 +17,6 @@ pub fn HomePage() -> impl IntoView {
                     </div>
                 </div>
             </nav>
-
-            // Add Blog Button
             <div class="flex justify-center mt-8">
                 <a href="/write-blog">
                     <button class="bg-black hover:bg-white-800 text-white font-bold py-2 px-4 rounded">

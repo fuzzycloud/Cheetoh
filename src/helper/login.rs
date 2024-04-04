@@ -4,9 +4,11 @@ pub async fn login(
     form_data: actix_web::web::Form<crate::helper::singup::AuthData>,
     read_pool: actix_web::web::Data<sqlx::SqlitePool>,
 ) -> Result<impl actix_web::Responder, actix_web::Error> {
+    use actix_web::HttpResponse;
     use log::error;
     use serde_json::json;
     use sqlx::Row;
+
 
     let email = form_data.email.clone();
     let password = form_data.password.clone();
@@ -32,12 +34,11 @@ pub async fn login(
                 .append_header((actix_web::http::header::LOCATION, "/home_page"))
                 .finish())
         } else {
-            error!("Password or email not Valid.");
-
-            Err(actix_web::error::ErrorNotFound(json!({
-                "message": "Password Or Email Not Valid",
+            let error_message = json!({
+                "error_message": "Password Or Email Not Valid",
                 "code": 404,
-            })))
+            });
+            Ok(HttpResponse::Ok().json(error_message))
         }
     } else {
         error!("User data not found in the database.");
