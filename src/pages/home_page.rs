@@ -1,24 +1,29 @@
 use leptos::*;
 
-// Renders the home page of your application.
 #[component]
 pub fn HomePage() -> impl IntoView {
-    let (count, set_count) = create_signal(0);
 
     view! {
-        <main class="my-0 mx-auto max-w-3xl text-center">
-            <h2 class="p-6 text-4xl">"Welcome to Leptos with Tailwind"</h2>
-            <p class="px-10 pb-10 text-left">
-                "Tailwind will scan your Rust files for Tailwind class names and compile them into a CSS file."
-            </p>
-            <button class="btn btn-neutral" on:click=move |_| set_count.update(|count| *count += 1)>
-                "Something's here | "
-                {move || {
-                    if count.get() == 0 { "Click me!".to_string() } else { count.get().to_string() }
-                }}
-
-                " | Some more text"
-            </button>
-        </main>
+        <div>
+            <nav class="flex items-center justify-between p-6 bg-blue-500 text-black">
+                <div class="flex items-center flex-shrink-0 mr-6 text-3xl">
+                    <span class="font-semibold tracking-tight">Cheetoh</span>
+                </div>
+                <div class="hidden lg:block">
+                    <div class="flex items-center text-2xl">
+                        <a href="#" class="mr-4 font-semibold text-black hover:text-black-200">Contact Us</a>
+                        <a href="#" class="mr-4 font-semibold text-black hover:text-black-200">About Us</a>
+                        <a href="/write-blog" class="text-black font-semibold hover:text-gray-200">Add Blog</a>
+                    </div>
+                </div>
+            </nav>
+            <div class="flex justify-center mt-8">
+                <a href="/write-blog">
+                    <button class="bg-black hover:bg-white-800 text-white font-bold py-2 px-4 rounded">
+                        "Add Blog"
+                    </button>
+                </a>
+            </div>
+        </div>
     }
 }
