@@ -1,7 +1,7 @@
 use leptos::*;
 
 #[component]
-pub fn HomePage() -> impl IntoView {
+pub fn WriteBlog() -> impl IntoView {
     view! {
         <div>
             // Navigation Bar
@@ -13,18 +13,16 @@ pub fn HomePage() -> impl IntoView {
                     <div class="flex items-center text-2xl">
                         <a href="#" class="mr-4 font-semibold text-black hover:text-black-200">Contact Us</a>
                         <a href="#" class="mr-4 font-semibold text-black hover:text-black-200">About Us</a>
-                        <a href="/write-blog" class="text-black font-semibold hover:text-gray-200">Add Blog</a>
+                        <a href="#" class="text-black font-semibold hover:text-gray-200">Add Blog</a>
                     </div>
                 </div>
             </nav>
 
             // Add Blog Button
             <div class="flex justify-center mt-8">
-                <a href="/write-blog">
-                    <button class="bg-black hover:bg-white-800 text-white font-bold py-2 px-4 rounded">
-                        "Add Blog"
-                    </button>
-                </a>
+                <button class="bg-black hover:bg-white-800 text-white font-bold py-2 px-4 rounded">
+                    "hello Blog"
+                </button>
             </div>
         </div>
     }
