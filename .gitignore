@@ -12,6 +12,10 @@ test-results/
 end2end/playwright-report/
 playwright/.cache/
 
+cheetoh.db
+cheetoh.db-shm
+cheetoh.db-wal
+
 
 # Created by https://www.toptal.com/developers/gitignore/api/windows,linux,macos,rust-analyzer,rust,node,visualstudiocode,intellij+all
 # Edit at https://www.toptal.com/developers/gitignore?templates=windows,linux,macos,rust-analyzer,rust,node,visualstudiocode,intellij+all
